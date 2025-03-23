@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Каталог товаров</h1>
+<div class="btn-group-vertical" role="group" aria-label="Vertical button group">
+    {% for category in categories %}
+    <a type="button" class="btn btn-secondary" href="{% url 'category' category.slug %}">{{ category.category_name }}</a>
+    {% endfor %}
+</div>
+{% endblock %}
