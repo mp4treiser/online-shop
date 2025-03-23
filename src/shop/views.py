@@ -14,7 +14,7 @@ def home(request):
     ]
     return render(request, template_name="home.html", context={'categories': categories})
 
-def category(request, category):
+def category(request, category_slug):
     goods = {
         "pc-parts": [
             {"good_name": "RTX 4080", "price": 9000, "status": "В наличии"},
@@ -46,9 +46,9 @@ def category(request, category):
         {"category_name": "Книги", "slug": "books"},
     ]
 
-    category_name = next((category["category_name"] for category in categories if category["slug"] == category), "Неизвестная категория")
+    category_name = next((category["category_name"] for category in categories if category["slug"] == category_slug), "Неизвестная категория")
     return render(request, template_name="category.html", context={
-        'goods': goods.get(category, []),
+        'goods': goods.get(category_slug, []),
         'category_name': category_name,
     })
 
