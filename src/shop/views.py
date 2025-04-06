@@ -1,71 +1,28 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 
+from .models import Product, ProductCategory
+
 def info(request):
     return render(request, template_name="info.html")
 
 def home(request):
-    categories = [
-        {"category_name": "Комплектующие для ПК", "slug": "pc-parts"},
-        {"category_name": "Ноутбуки", "slug": "laptops"},
-        {"category_name": "Смартфоны", "slug": "smartphones"},
-        {"category_name": "Планшеты", "slug": "tablets"},
-        {"category_name": "Книги", "slug": "books"},
-    ]
-    return render(request, template_name="home.html", context={'categories': categories})
+    return render(request, template_name="home.html", context={'categories': ProductCategory.choices})
+
 
 def category(request, category_slug):
-    goods = {
-        "pc-parts": [
-            {"good_name": "RTX 4080", "price": 9000, "status": "В наличии"},
-            {"good_name": "Ryzen 9 9800X3D", "price": 4000, "status": "В наличии"},
-        ],
-        "laptops": [
-            {"good_name": "Ноутбук ASUS", "price": 3000, "status": "В наличии"},
-            {"good_name": "Ноутбук HP", "price": 2500, "status": "Под заказ"},
-        ],
-        "smartphones": [
-            {"good_name": "iPhone 15", "price": 3600, "status": "В наличии"},
-            {"good_name": "Samsung Galaxy S23", "price": 3000, "status": "Под заказ"},
-        ],
-        "tablets": [
-            {"good_name": "iPad 11 Pro", "price": 1700, "status": "Под заказ"},
-            {"good_name": "Samsung Tab S8", "price": 2000, "status": "В наличии"},
-        ],
-        "books": [
-            {"good_name": "Война и мир", "price": 25, "status": "В наличии"},
-            {"good_name": "Богатый папа, бедный папа", "price": 15, "status": "В наличии"},
-        ],
-    }
+    products = Product.objects.filter(category=category_slug)
 
-    categories = [
-        {"category_name": "Комплектующие для ПК", "slug": "pc-parts"},
-        {"category_name": "Ноутбуки", "slug": "laptops"},
-        {"category_name": "Смартфоны", "slug": "smartphones"},
-        {"category_name": "Планшеты", "slug": "tablets"},
-        {"category_name": "Книги", "slug": "books"},
-    ]
+    category_name = dict(ProductCategory.choices)[category_slug]
 
-    category_name = next((category["category_name"] for category in categories if category["slug"] == category_slug), "Неизвестная категория")
     return render(request, template_name="category.html", context={
-        'goods': goods.get(category_slug, []),
-        'category_name': category_name,
+        'products': products,
+        'category_name': category_name
     })
 
-def goods(request):
-    goods = [
-        {"good_name": "RTX 4080", "price": 9000, "status": "В наличии", "category": "Комплектующие для ПК"},
-        {"good_name": "Ryzen 9 9800X3D", "price": 4000, "status": "В наличии", "category": "Комплектующие для ПК"},
-        {"good_name": "Ноутбук ASUS", "price": 3000, "status": "В наличии", "category": "Ноутбуки"},
-        {"good_name": "Ноутбук HP", "price": 2500, "status": "Под заказ", "category": "Ноутбуки"},
-        {"good_name": "iPhone 15", "price": 3600, "status": "В наличии", "category": "Смартфоны"},
-        {"good_name": "Samsung Galaxy S23", "price": 3000, "status": "Под заказ", "category": "Смартфоны"},
-        {"good_name": "iPad 11 Pro", "price": 1700, "status": "Под заказ", "category": "Планшеты"},
-        {"good_name": "Samsung Tab S8", "price": 2000, "status": "В наличии", "category": "Планшеты"},
-        {"good_name": "Война и мир", "price": 25, "status": "В наличии", "category": "Книги"},
-        {"good_name": "Богатый папа, бедный папа", "price": 15, "status": "В наличии", "category": "Книги"},
-    ]
-    return render(request, template_name='goods.html', context={'goods': goods})
+def products(request):
+    products = Product.objects.all()
+    return render(request, template_name='products.html', context={'products': products})
 
 def users(request):
     users = [
