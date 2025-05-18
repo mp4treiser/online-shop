@@ -1,0 +1,127 @@
+Task1
+
+[Product]*-*[Order]
+[User]1-*[Order]
+[Feedback]*-1[User]
+[Feedback]*-1[Product]
+[Providers]1-*[Product]
+[ProductDetail]1-1[Product]
+
+Task2
+
+Подлил в github
+
+Task3
+
+Подлил в github
+
+Task4
+
+Provider.objects.create(name="Apple", country="USA", zip_address="12345")
+Provider.objects.create(name="Puma", country="USA", zip_address="12345")
+Provider.objects.create(name="Adidas", country="USA", zip_address="12345")
+Provider.objects.create(name="Bosh", country="Germany", zip_address="12345")
+Provider.objects.create(name="Bort", country="China", zip_address="12345")
+Provider.objects.create(name="Xiaomi", country="China", zip_address="12345")
+Provider.objects.create(name="Lamborgini", country="Italy", zip_address="12345")
+Provider.objects.create(name="KidsToys", country="Germany", zip_address="12345")
+Provider.objects.create(name="BookWorld", country="UK", zip_address="12345")
+Provider.objects.create(name="IKEA", country="Sweden", zip_address="12345")
+
+Product.objects.create(name="MacBook Pro", description="Apple laptop", price=1999.99, category="TQ", rating=4.8, count_items=15, provider=Provider.objects.get(name="Nike"))
+Product.objects.create(name="Python Crash Course", description="Programming book", price=39.99, category="BK", rating=4.7, count_items=30, provider=Provider.objects.get(name="BookWorld"))
+Product.objects.create(name="Office Chair", description="Ergonomic chair", price=249.99, category="FR", rating=4.3, count_items=8, provider=Provider.objects.get(name="IKEA"))
+Product.objects.create(name="Football", description="Professional ball", price=49.99, category="SP", rating=4.5, count_items=25, provider=Provider.objects.get(name="Adidas"))
+Product.objects.create(name="Teddy Bear", description="Soft toy", price=19.99, category="CN", rating=4.9, count_items=40, provider=Provider.objects.get(name="KidsToys"))
+Product.objects.create(name="Smartphone", description="Android phone", price=599.99, category="TQ", rating=4.4, count_items=12, provider=Provider.objects.get(name="Xiaomi"))
+Product.objects.create(name="Running Shoes", description="Sports shoes", price=89.99, category="SP", rating=4.6, count_items=20, provider=Provider.objects.get(name="Puma"))
+Product.objects.create(name="Coffee Table", description="Modern table", price=179.99, category="FR", rating=4.2, count_items=6, provider=Provider.objects.get(name="IKEA"))
+Product.objects.create(name="Car Engine", description="V8 engine", price=4999.99, category="TQ", rating=4.1, count_items=3, provider=Provider.objects.get(name="Lamborgini"))
+Product.objects.create(name="Drill", description="Power tool", price=129.99, category="TQ", rating=4.3, count_items=10, provider=Provider.objects.get(name="Bosh"))
+
+CustomUser.objects.create_user(username="john_doe", email="john@example.com", phone="+1234567890", password="password123")
+CustomUser.objects.create_user(username="jane_smith", email="jane@example.com", phone="+1987654321", password="password123")
+CustomUser.objects.create_user(username="mike_jones", email="mike@example.com", phone="+1122334455", password="password123")
+CustomUser.objects.create_user(username="sarah_wilson", email="sarah@example.com", phone="+1555666777", password="password123")
+CustomUser.objects.create_user(username="david_brown", email="david@example.com", phone="+1444333222", password="password123")
+CustomUser.objects.create_user(username="emily_davis", email="emily@example.com", phone="+1666777888", password="password123")
+CustomUser.objects.create_user(username="robert_taylor", email="robert@example.com", phone="+1777888999", password="password123")
+CustomUser.objects.create_user(username="lisa_miller", email="lisa@example.com", phone="+1888999000", password="password123")
+CustomUser.objects.create_user(username="alex_wong", email="alex@example.com", phone="+1999000111", password="password123")
+CustomUser.objects.create_user(username="olivia_harris", email="olivia@example.com", phone="+1222333444", password="password123")
+
+Order.objects.create(name="Order #1", description="John's order", user=CustomUser.objects.get(username="john_doe"))
+Order.objects.create(name="Order #2", description="Jane's order", user=CustomUser.objects.get(username="jane_smith"))
+Order.objects.create(name="Order #3", description="Mike's order", user=CustomUser.objects.get(username="mike_jones"))
+Order.objects.create(name="Order #4", description="Sarah's order", user=CustomUser.objects.get(username="sarah_wilson"))
+Order.objects.create(name="Order #5", description="David's order", user=CustomUser.objects.get(username="david_brown"))
+Order.objects.create(name="Order #6", description="Emily's order", user=CustomUser.objects.get(username="emily_davis"))
+Order.objects.create(name="Order #7", description="Robert's order", user=CustomUser.objects.get(username="robert_taylor"))
+Order.objects.create(name="Order #8", description="Lisa's order", user=CustomUser.objects.get(username="lisa_miller"))
+Order.objects.create(name="Order #9", description="Alex's order", user=CustomUser.objects.get(username="alex_wong"))
+Order.objects.create(name="Order #10", description="Olivia's order", user=CustomUser.objects.get(username="olivia_harris"))
+
+ProductOrder.objects.create(order=Order.objects.get(id=1), product=Product.objects.get(name="MacBook Pro"), detail="Priority shipping")
+ProductOrder.objects.create(order=Order.objects.get(id=1), product=Product.objects.get(name="Running Shoes"), detail="Size 42")
+ProductOrder.objects.create(order=Order.objects.get(id=2), product=Product.objects.get(name="Python Crash Course"), detail="Gift wrapping")
+ProductOrder.objects.create(order=Order.objects.get(id=2), product=Product.objects.get(name="Teddy Bear"), detail="Birthday gift")
+ProductOrder.objects.create(order=Order.objects.get(id=3), product=Product.objects.get(name="Office Chair"), detail="Black color")
+ProductOrder.objects.create(order=Order.objects.get(id=3), product=Product.objects.get(name="Coffee Table"), detail="Assembly required")
+ProductOrder.objects.create(order=Order.objects.get(id=4), product=Product.objects.get(name="Football"), detail="Official match ball")
+ProductOrder.objects.create(order=Order.objects.get(id=4), product=Product.objects.get(name="Running Shoes"), detail="Size 38")
+ProductOrder.objects.create(order=Order.objects.get(id=5), product=Product.objects.get(name="Smartphone"), detail="With case")
+ProductOrder.objects.create(order=Order.objects.get(id=5), product=Product.objects.get(name="Drill"), detail="With accessories")
+
+Feedback.objects.create(title="Great laptop", description="Fast and reliable", rating=5.0, user=CustomUser.objects.get(username="john_doe"), product=Product.objects.get(name="MacBook Pro"))
+Feedback.objects.create(title="Excellent book", description="Very helpful", rating=4.5, user=CustomUser.objects.get(username="jane_smith"), product=Product.objects.get(name="Python Crash Course"))
+Feedback.objects.create(title="Comfortable chair", description="Good for long hours", rating=4.0, user=CustomUser.objects.get(username="mike_jones"), product=Product.objects.get(name="Office Chair"))
+Feedback.objects.create(title="Awesome football", description="Great quality", rating=5.0, user=CustomUser.objects.get(username="sarah_wilson"), product=Product.objects.get(name="Football"))
+Feedback.objects.create(title="Cute toy", description="My child loves it", rating=4.8, user=CustomUser.objects.get(username="david_brown"), product=Product.objects.get(name="Teddy Bear"))
+Feedback.objects.create(title="Good phone", description="Value for money", rating=4.2, user=CustomUser.objects.get(username="emily_davis"), product=Product.objects.get(name="Smartphone"))
+Feedback.objects.create(title="Comfortable shoes", description="Perfect for running", rating=4.7, user=CustomUser.objects.get(username="robert_taylor"), product=Product.objects.get(name="Running Shoes"))
+Feedback.objects.create(title="Nice table", description="Fits my living room", rating=4.3, user=CustomUser.objects.get(username="lisa_miller"), product=Product.objects.get(name="Coffee Table"))
+Feedback.objects.create(title="Powerful engine", description="For my project car", rating=4.9, user=CustomUser.objects.get(username="alex_wong"), product=Product.objects.get(name="Car Engine"))
+Feedback.objects.create(title="Reliable drill", description="Good for DIY", rating=4.4, user=CustomUser.objects.get(username="olivia_harris"), product=Product.objects.get(name="Drill"))
+
+ProductDetail.objects.create(product=Product.objects.get(name="MacBook Pro"), height=0.9, weight=1.4, description_all="Detailed specs: M1 chip, 16GB RAM, 512GB SSD")
+ProductDetail.objects.create(product=Product.objects.get(name="Python Crash Course"), height=1.5, weight=0.5, description_all="2nd edition, 544 pages, paperback")
+ProductDetail.objects.create(product=Product.objects.get(name="Office Chair"), height=1.2, weight=15.0, description_all="Adjustable height, lumbar support, 5-year warranty")
+ProductDetail.objects.create(product=Product.objects.get(name="Football"), height=0.22, weight=0.43, description_all="Size 5, FIFA approved, synthetic leather")
+ProductDetail.objects.create(product=Product.objects.get(name="Teddy Bear"), height=0.3, weight=0.25, description_all="30cm tall, hypoallergenic, machine washable")
+ProductDetail.objects.create(product=Product.objects.get(name="Smartphone"), height=0.15, weight=0.18, description_all="6.5\" AMOLED, 128GB storage, 48MP camera")
+ProductDetail.objects.create(product=Product.objects.get(name="Running Shoes"), height=0.12, weight=0.3, description_all="Breathable mesh, cushioned sole, size options")
+ProductDetail.objects.create(product=Product.objects.get(name="Coffee Table"), height=0.45, weight=12.0, description_all="120x60cm, oak finish, modern design")
+ProductDetail.objects.create(product=Product.objects.get(name="Car Engine"), height=0.8, weight=180.0, description_all="V8 4.0L, 600HP, aluminum block")
+ProductDetail.objects.create(product=Product.objects.get(name="Drill"), height=0.25, weight=1.8, description_all="18V cordless, 2 batteries included, 30Nm torque")
+
+Task5
+orders_with_products = Order.objects.filter(product__isnull=False).distinct()
+orders_with_products
+
+Task6
+products_with_details = Product.objects.filter(product_detail__isnull=False)
+products_with_details
+
+Task7
+products_in_order_5 = Product.objects.filter(product_order__order_id=5)
+products_in_order_5
+
+Task8
+german_products = Product.objects.filter(provider__country='Germany')
+german_products 
+
+Task9
+sport_orders = Order.objects.filter(product_order__product__category='SP').distinct()
+sport_orders
+
+Task10
+expensive_feedbacks = Feedback.objects.filter(product__price__gt=500)
+expensive_feedbacks
+
+Task11
+orders_by_reviewers = Order.objects.filter(user__feedbacks__isnull=False).distinct()
+orders_by_reviewers
+
+Task12
+available_products = Product.objects.filter(count_items__gt=5, provider__isnull=False)
+available_products 

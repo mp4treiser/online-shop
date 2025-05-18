@@ -1,0 +1,64 @@
+Task1
+Залито на github
+
+Task2
+python manage.py shell_plus --print-sql
+
+Product.objects.create(name="Book Python", category="BK", price="30.12", description="Python for newbies", rating=4.1, count_items=99)
+Product.objects.create(name="Guitar Tutorial", category="BK", price="25.50", description="Learn to play guitar in 30 days", rating=4.3, count_items=45)  
+Product.objects.create(name="Wooden Chair", category="FR", price="59.99", description="Handcrafted oak chair", rating=4.5, count_items=30)  
+Product.objects.create(name="Chess Set", category="SP", price="22.75", description="Classic wooden chess board", rating=4.7, count_items=80)  
+Product.objects.create(name="Watercolor Brushes", category="TQ", price="15.20", description="Professional artist brushes", rating=4.4, count_items=120)  
+Product.objects.create(name="Teddy Bear", category="CN", price="12.99", description="Soft plush toy for kids", rating=4.8, count_items=200)  
+Product.objects.create(name="Notebook", category="DF", price="5.99", description="Simple lined notebook", rating=3.9, count_items=150)  
+Product.objects.create(name="Football", category="SP", price="19.95", description="Official size and weight", rating=4.6, count_items=65)  
+Product.objects.create(name="Oil Painting Guide", category="BK", price="18.40", description="Step-by-step painting techniques", rating=4.2, count_items=40)  
+Product.objects.create(name="Kids Puzzle", category="CN", price="8.50", description="Educational 100-piece puzzle", rating=4.0, count_items=90)
+
+Task3
+
+products = Product.objects.all()
+products
+
+Task4
+
+books = Product.objects.filter(category="BK")
+books
+
+Task5
+
+products_available = Product.objects.filter(is_available=True)
+products_available
+
+Task6
+
+products = Product.objects.filter(Q(price__gt=1000) | Q(rating__gt=4))
+products
+
+Task7
+
+cheap_products = Product.objects.all().order_by("price")[:5]
+cheap_products 
+
+Task8
+
+pro_products = Product.objects.filter(name__icontains='pro')
+pro_products
+
+Task9
+
+products = Product.objects.filter(count_items__gt=0).order_by('-rating', '-price')
+products
+
+Task10
+
+Product.objects.filter(count_items=0).update(is_available=False)
+
+Task11
+
+products = Product.objects.filter(rating__gt=4).exclude(photo=None).values('name', 'price')
+products
+
+Task12
+
+Product.objects.get(id=1).delete()
