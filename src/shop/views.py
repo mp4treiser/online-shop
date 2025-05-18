@@ -1,96 +1,109 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from django.db.models import Q
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic import TemplateView, ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.urls import reverse_lazy
 
 from .models import Product, ProductCategory
 from .models.forms import ProductForm, ProductFilterForm, ProductSearchForm
 
 
-def info(request):
-    return render(request, template_name="info.html")
+class HomeView(TemplateView):
+    template_name = 'home.html'
 
-def home(request):
-    return render(request, template_name="home.html", context={'categories': ProductCategory.choices})
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['categories'] = ProductCategory.choices
+        return context
 
 
-def category(request, category_slug):
-    products = Product.objects.filter(category=category_slug)
+class ProductListView(ListView):
+    model = Product
+    template_name = 'products/product_list.html'
+    context_object_name = 'products'
+    paginate_by = 10
+    ordering = ['-id']  # Сортировка по ID в обратном порядке (новые сначала)
 
-    category_name = dict(ProductCategory.choices)[category_slug]
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['filter_form'] = ProductFilterForm(self.request.GET)
+        context['search_form'] = ProductSearchForm(self.request.GET)
+        return context
 
-    return render(request, template_name="products/category.html", context={
-        'products': products,
-        'category_name': category_name
-    })
+    def get_queryset(self):
+        queryset = Product.objects.all().order_by('-id')  # Базовая сортировка
+        filter_form = ProductFilterForm(self.request.GET)
+        search_form = ProductSearchForm(self.request.GET)
 
-def products(request):
-    products = Product.objects.all()
-    return render(request, template_name='products.html', context={'products': products})
+        if filter_form.is_valid():
+            min_price = filter_form.cleaned_data.get('min_price')
+            max_price = filter_form.cleaned_data.get('max_price')
+            category = filter_form.cleaned_data.get('category')
 
-def users(request):
-    users = [
-        {"name": "Райан Рейнольдс", "age": 48, "phone": "+375291234567", "photo": "shop/img/users/raian.jpg"},
-        {"name": "Роберт Дауни — младший", "age": 59, "phone": "+79871234321", "photo": "shop/img/users/robert-downey.jpg"},
-        {"name": "Тоби Магуайр", "age": 49, "phone": "5555555555", "photo": "shop/img/users/toby_maguire.jpeg"},
-        {"name": "Том Холланд", "age": 28, "phone": "1111111111", "photo": "shop/img/users/tom_holland.jpeg"},
-        {"name": "Зендея Коулман", "age": 28, "phone": "9999999999", "photo": "shop/img/users/zendeya.jpg"},
-    ]
-    return render(request, template_name='users.html', context={'users': users})
+            if min_price is not None:
+                queryset = queryset.filter(price__gte=float(min_price))
+            if max_price is not None:
+                queryset = queryset.filter(price__lte=float(max_price))
+            if category:
+                queryset = queryset.filter(category=category)
 
-def product_form(request):
-    if request.method == 'POST':
-        form = ProductForm(request.POST, request.FILES)
-        if form.is_valid():
-            product = form.save(commit=False)
-            product.user = request.user
-            product.save()
-            return redirect('product_detail', pk=product.pk)
-    else:
-        form = ProductForm()
-    return render(request, 'products/product_form.html', {'form': form})
+        if search_form.is_valid():
+            query = search_form.cleaned_data.get('query')
+            if query:
+                queryset = queryset.filter(
+                    Q(name__icontains=query) | Q(description__icontains=query)
+                )
 
-def product_update(request, pk):
-    product = get_object_or_404(Product, pk=pk)
-    if request.method == 'POST':
-        form = ProductForm(request.POST, request.FILES, instance=product)
-        if form.is_valid():
-            form.save()
-            return redirect('product_detail', pk=product.pk)
-    else:
-        form = ProductForm(instance=product)
-    return render(request, 'products/product_form.html', {'form': form})
+        return queryset
 
-def product_list(request):
-    products = Product.objects.all()
-    filter_form = ProductFilterForm(request.GET)
-    search_form = ProductSearchForm(request.GET)
+class ProductDetailView(DetailView):
+    model = Product
+    template_name = 'products/product_detail.html'
+    context_object_name = 'product'
 
-    if filter_form.is_valid():
-        min_price = filter_form.cleaned_data.get('min_price')
-        max_price = filter_form.cleaned_data.get('max_price')
-        category = filter_form.cleaned_data.get('category')
+class ProductCreateView(LoginRequiredMixin, CreateView):
+    model = Product
+    form_class = ProductForm
+    template_name = 'products/product_form.html'
+    success_url = reverse_lazy('product_list')
 
-        if min_price is not None:
-            products = products.filter(price__gte=float(min_price))
-        if max_price is not None:
-            products = products.filter(price__lte=float(max_price))
-        if category:
-            products = products.filter(category=category)
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)
 
-    if search_form.is_valid():
-        query = search_form.cleaned_data.get('query')
-        if query:
-            products = products.filter(
-                Q(name__icontains=query) | Q(description__icontains=query)
-            )
+class ProductUpdateView(LoginRequiredMixin, UpdateView):
+    model = Product
+    form_class = ProductForm
+    template_name = 'products/product_form.html'
+    success_url = reverse_lazy('product_list')
 
-    context = {
-        'products': products,
-        'filter_form': filter_form,
-        'search_form': search_form,
-    }
-    return render(request, 'products/product_list.html', context)
+    def get_queryset(self):
+        return super().get_queryset().filter(user=self.request.user)
 
-def product_detail(request, pk):
-    product = get_object_or_404(Product, pk=pk)
-    return render(request, 'products/product_detail.html', {'product': product})
+class ProductDeleteView(LoginRequiredMixin, DeleteView):
+    model = Product
+    template_name = 'products/product_confirm_delete.html'
+    success_url = reverse_lazy('product_list')
+
+    def get_queryset(self):
+        return super().get_queryset().filter(user=self.request.user)
+
+class CategoryProductsView(ListView):
+    model = Product
+    template_name = 'products/category.html'
+    context_object_name = 'products'
+    paginate_by = 10
+
+    def get_queryset(self):
+        category = self.kwargs.get('category')
+        return Product.objects.filter(category=category)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['category'] = self.kwargs.get('category')
+        return context
+
+class InfoView(TemplateView):
+    template_name = 'info.html'
