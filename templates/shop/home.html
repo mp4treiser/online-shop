@@ -2,11 +2,5 @@
 
 {% block content %}
 <h1>Каталог товаров</h1>
-<div class="btn-group-vertical" role="group" aria-label="Vertical button group">
-    {% for slug, name in categories %}
-    <a type="button" class="btn btn-secondary" href="{% url 'category' slug %}">
-        {{ name }}
-    </a>
-    {% endfor %}
-</div>
+
 {% endblock %}
