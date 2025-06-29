@@ -6,3 +6,4 @@ from .provider import Provider
 from .feedback import Feedback
 from .provider_rating import ProviderRating
 from .product_rating import ProductRating
+from .queue import Queue
