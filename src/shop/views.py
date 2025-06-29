@@ -9,12 +9,15 @@ from django.urls import reverse_lazy
 from .models import Product, ProductCategory
 from .models.forms import ProductForm, ProductFilterForm, ProductSearchForm
 
+from .tasks import debug_task
+
 
 class HomeView(TemplateView):
     template_name = 'home.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        debug_task.delay(1)
         context['categories'] = ProductCategory.choices
         return context
 
@@ -28,6 +31,7 @@ class ProductListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        debug_task.delay(1)
         context['filter_form'] = ProductFilterForm(self.request.GET)
         context['search_form'] = ProductSearchForm(self.request.GET)
         return context

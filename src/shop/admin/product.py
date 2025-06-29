@@ -8,8 +8,11 @@ from ..models import (
     ProductDetail,
     Provider,
     ProductOrder,
-    Feedback
+    Feedback, ProviderRating
 )
+from ..models.base import Rating
+from ..models.product_rating import ProductRating
+
 
 class ProviderProductInline(admin.TabularInline):
     model = Product
@@ -66,3 +69,6 @@ admin.site.register(Order)
 admin.site.register(ProductDetail)
 admin.site.register(ProductOrder)
 admin.site.register(Feedback)
+admin.site.register(Rating)
+admin.site.register(ProductRating)
+admin.site.register(ProviderRating)

@@ -45,11 +45,16 @@ INSTALLED_APPS = [
     # helping apps
     'django_extensions',
     # user apps
+    'rest_framework',
     'shop',
+    'api',
     'authentication',
     # forms
     'crispy_forms',
     'crispy_bootstrap5',
+    # celery
+    'django_celery_results',
+    'django_celery_beat',
 ]
 
 MIDDLEWARE = [
@@ -153,3 +158,28 @@ AUTH_USER_MODEL = "authentication.CustomUser"
 # Crispy
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 CRISPY_TEMPLATE_PACK = "bootstrap5"
+
+# REST
+
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+    ],
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 10
+}
+
+# Celery
+# CELERY_TIMEZONE = "Europe/Minsk"
+CELERY_TASK_TRACK_STARTED = True
+CELERY_TASK_TIME_LIMIT = 30 * 60
+CELERY_RESULT_BACKEND = 'django-db'
+CELERY_BROKER_URL = "redis://localhost:6379"
+# CELERY_RESULT_BACKEND = "redis://localhost:6379"
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'

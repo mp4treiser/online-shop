@@ -4,3 +4,6 @@ from .order import Order
 from .product_detail import ProductDetail
 from .provider import Provider
 from .feedback import Feedback
+from .provider_rating import ProviderRating
+from .product_rating import ProductRating
+from .queue import Queue
